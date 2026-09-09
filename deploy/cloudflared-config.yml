@@ -1,0 +1,10 @@
+# /root/.cloudflared/config.yml inside the container
+# Replace TUNNEL-ID with the ID printed by `cloudflared tunnel create portfolio`
+
+tunnel: TUNNEL-ID
+credentials-file: /root/.cloudflared/TUNNEL-ID.json
+
+ingress:
+  - hostname: yourdomain.com
+    service: http://127.0.0.1:8080
+  - service: http_status:404

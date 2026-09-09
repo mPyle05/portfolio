@@ -1,0 +1,200 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+  body {
+    @apply bg-bg text-ink font-body antialiased;
+  }
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid theme("colors.copper");
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Accessibility: hidden until keyboard-focused, lets keyboard/screen-reader
+     users jump straight past the header nav into the page content. */
+  .skip-link {
+    @apply fixed left-4 top-4 z-50 bg-copper text-[#14100A] font-semibold text-sm px-4 py-2 no-underline;
+    transform: translateY(-150%);
+    transition: transform 0.2s ease;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+}
+
+@layer components {
+  /* Page container: consistent max-width + responsive edge padding, used on every page/section */
+  .container-site {
+    @apply max-w-site mx-auto px-6 sm:px-10 lg:px-16;
+  }
+
+  /* Consistent section rhythm */
+  .section {
+    @apply py-20 sm:py-24;
+  }
+
+  /* Faint background grid, purely atmospheric */
+  .grid-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      linear-gradient(theme("colors.line-soft") 1px, transparent 1px),
+      linear-gradient(90deg, theme("colors.line-soft") 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: 0.35;
+    mask-image: linear-gradient(to bottom, transparent, black 8%, black 60%, transparent 100%);
+  }
+
+  .site-nav a {
+    @apply relative text-ink-dim text-sm font-medium pb-0.5 transition-colors duration-200 no-underline;
+  }
+  .site-nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 0;
+    height: 1px;
+    background: theme("colors.copper");
+    transition: width 0.25s ease;
+  }
+  .site-nav a:hover {
+    @apply text-ink;
+  }
+  .site-nav a:hover::after {
+    width: 100%;
+  }
+  .site-nav a.is-active {
+    @apply text-copper;
+  }
+
+  .btn {
+    @apply inline-flex items-center gap-2 font-body font-semibold text-sm px-5 py-3 border border-transparent transition-colors duration-200 no-underline;
+  }
+  .btn-primary {
+    @apply bg-copper text-[#14100A];
+  }
+  .btn-primary:hover {
+    background-color: theme("colors.copper-hover");
+  }
+  .btn-ghost {
+    @apply border-line text-ink;
+  }
+  .btn-ghost:hover {
+    @apply border-copper text-copper;
+  }
+
+  .ref-tag {
+    @apply font-mono text-xs text-copper border border-line px-[7px] py-[3px];
+  }
+
+  .tag {
+    @apply font-mono text-xs text-ink-dim border border-line px-2.5 py-1;
+  }
+
+  .project-link {
+    @apply inline-flex items-center gap-1.5 no-underline text-cyan text-sm font-medium transition-colors duration-200;
+  }
+  .project-link:hover {
+    @apply text-ink;
+  }
+
+  .bullet {
+    @apply relative pl-4;
+  }
+  .bullet::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 5px;
+    height: 5px;
+    background: theme("colors.copper");
+  }
+  .bullet-cyan::before {
+    background: theme("colors.cyan");
+  }
+
+  .contact-link {
+    @apply flex justify-between items-center no-underline py-4 border-t border-line transition-[padding] duration-200;
+  }
+  .contact-link:hover {
+    padding-left: 8px;
+  }
+  .contact-link:hover .contact-value {
+    @apply text-copper;
+  }
+
+  /* Empty media placeholder — used on project pages until real assets are added */
+  .media-placeholder {
+    @apply flex flex-col items-center justify-center gap-2 aspect-[4/3] border border-dashed border-line text-ink-faint text-xs font-mono text-center px-4;
+  }
+
+  .code-panel {
+    @apply bg-bg-raised border border-line p-6 font-mono text-[13px] leading-relaxed text-ink-dim overflow-x-auto;
+  }
+
+  .breadcrumb-link {
+    @apply inline-flex items-center gap-1.5 no-underline text-ink-dim text-sm font-medium transition-colors duration-200;
+  }
+  .breadcrumb-link:hover {
+    @apply text-copper;
+  }
+}
+
+@layer utilities {
+  .trace-path {
+    fill: none;
+    stroke: theme("colors.copper");
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1400;
+    stroke-dashoffset: 1400;
+    animation: draw-trace 2.4s ease-out forwards;
+  }
+  .trace-path-b {
+    stroke: theme("colors.cyan");
+    opacity: 0.6;
+    animation-delay: 0.15s;
+  }
+  .trace-node {
+    fill: theme("colors.copper");
+    opacity: 0;
+    animation: node-in 0.4s ease-out forwards;
+    animation-delay: 1.9s;
+  }
+  .trace-node-b {
+    fill: theme("colors.cyan");
+    animation-delay: 2.05s;
+  }
+  @keyframes draw-trace {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes node-in {
+    to {
+      opacity: 1;
+    }
+  }
+}
