@@ -118,7 +118,7 @@
 
   /* Modern elevated card */
   .card-elevated {
-    @apply bg-bg-card/70 border border-line rounded-xl transition-all duration-200 hover:border-line-hover hover:bg-bg-raised/80 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/40;
+    @apply bg-bg-card/70 border border-line rounded-xl overflow-hidden transition-all duration-200 hover:border-line-hover hover:bg-bg-raised/80 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/40;
   }
 
   /* Clean bullets */

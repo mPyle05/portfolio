@@ -1,5 +1,5 @@
 // ============================================================================
-//  SITE DATA — MASON PYLE
+//  SITE DATA | MASON PYLE
 //  Embedded Systems, Firmware Architecture & Hardware-Software Co-Design
 // ============================================================================
 
@@ -65,11 +65,11 @@ const siteData = {
     {
       slug: "keyboard",
       title: "RP2040 Custom Mechanical Keyboard",
-      dates: "Dec 2024 – Jan 2026",
-      context: "Personal Hardware & Firmware Project",
+      dates: "Dec 2024 - Jan 2026",
+      context: "Hardware & Firmware",
       featured: true,
       summary:
-        "Custom 91-key mechanical keyboard designed from bare PCB to firmware — 10×9 diode matrix, 82-pixel addressable RGB with custom animation classes, and KMK / CircuitPython layer remapping.",
+        "Custom 91-key mechanical keyboard designed from bare PCB to firmware: 10×9 diode matrix, 82-pixel addressable RGB with custom procedural animation classes, and KMK / CircuitPython layer remapping.",
       tags: ["CircuitPython", "KMK Firmware", "RP2040", "KiCad PCB", "NeoPixel RGB", "CAD"],
       links: {
         repo: "https://github.com/mPyle05",
@@ -80,7 +80,7 @@ const siteData = {
         bullets: [
           "Designed and routed a custom PCB in KiCad featuring a 10×9 matrix with 1N4148 surface-mount diodes (COL2ROW orientation) for complete anti-ghosting",
           "Chained and decoupled 82 addressable NeoPixel RGB LEDs, powered with local bypass capacitors and driven at 60 Hz over RP2040 GPIO SDA",
-          "Mapped 19 dedicated GPIO pins (Rows: D0–D8, SCL; Cols: D9, D10, A0–A3, SCK, MISO, MOSI) to interface all 91 switch positions",
+          "Mapped 19 dedicated GPIO pins (Rows: D0-D8, SCL; Cols: D9, D10, A0-A3, SCK, MISO, MOSI) to interface all 91 switch positions",
           "Implemented KMK firmware on CircuitPython with multi-layer keymaps, momentary layer toggles (numpad/navigation, RGB controls, function keys), and transparent passthroughs",
           "Authored custom procedural lighting modes (such as MovingGradient) extending KMK's AnimationModes with time-based modulo color math",
           "Modeled a two-piece precision enclosure and switch plate in CAD, toleranced for switch retention and acoustic dampening",
@@ -104,7 +104,7 @@ const siteData = {
         intro:
           "Built on KMK and CircuitPython. The firmware defines the 10×9 matrix pinout, COL2ROW diode orientation, and multi-layer keymaps. A custom MovingGradient animation class extends AnimationModes, calculating real-time modulo color steps across all 82 LEDs.",
         language: "python",
-        snippet: `# firmware/code.py — KMK Firmware with Custom RGB Animation
+        snippet: `# firmware/code.py | KMK Firmware with Custom RGB Animation
 import time
 import board as b
 from kmk.kmk_keyboard import KMKKeyboard
@@ -169,9 +169,9 @@ if __name__ == '__main__':
 
     {
       slug: "solar-car",
-      title: "Bearcat Solar Car — Low-Voltage Systems",
-      dates: "Aug 2024 – Present",
-      context: "American Solar Challenge · UC Racing",
+      title: "Bearcat Solar Car | Low-Voltage Systems",
+      dates: "Aug 2024 - Present",
+      context: "American Solar Challenge | UC Racing",
       featured: true,
       summary:
         "Software lead for the low-voltage electronics on UC's solar racer. Architected a safety-critical CAN 2.0B network linking the BMS, driver cluster, and MPPT controllers across 1,500+ miles of public highway racing.",
@@ -182,7 +182,7 @@ if __name__ == '__main__':
       },
       overview: {
         intro:
-          "The Low-Voltage system is a solar car's nervous system; managing driver safety instrumentation, state-of-charge telemetry, lighting controllers, and CAN bus communication across a hostile high-EMI electrical environment. All of this must stay live across 1,500+ miles of public highway racing.",
+          "The low-voltage subsystem serves as the vehicle nervous system: orchestrating driver safety instrumentation, state-of-charge telemetry, solid-state power distribution, and real-time CAN bus messaging across a high-EMI electrical environment over 1,500+ miles of highway racing.",
         bullets: [
           "Lead embedded software development for all low-voltage vehicular electronics and safety-critical driver instrumentation",
           "Architected CAN 2.0B network at 500 kbps linking HV BMS safety interlocks, MPPT solar controllers, and driver cockpit displays",
@@ -262,8 +262,8 @@ public class CanTelemetryDispatcher {
     {
       slug: "homelab",
       title: "Self-Hosted Home Lab",
-      dates: "2026 – Present",
-      context: "Personal Infrastructure Project",
+      dates: "2024 - Present",
+      context: "Self-Hosted Infrastructure",
       featured: true,
       summary:
         "Modular, production-grade self-hosted homelab stack running on Proxmox VE. 10 decoupled Docker Compose stacks featuring Cloudflare Zero Trust tunnels, a WireGuard-isolated Servarr media acquisition fleet with atomic hardlinks, GPU-transcoded Jellyfin, Immich, Home Assistant with Matter, and Obsidian LiveSync.",
@@ -276,7 +276,7 @@ public class CanTelemetryDispatcher {
           "Architected on a repurposed Lenovo desktop running Proxmox VE. Storage and services are cleanly partitioned: a dedicated LXC container manages the underlying ZFS storage pool, bind-mounted to a Debian Docker host. 10 isolated Docker Compose stacks communicate over segregated internal bridge networks (cloudflare_tunnelnet, servarrnetwork, and host network mode), with external access secured by Cloudflare Zero Trust.",
         bullets: [
           "Partitioned infrastructure into 10 decoupled Docker Compose directory stacks (cloudflare, homarr, home-assistant, immich, jellyfin, kavita, obsidian, servarr, vaultwarden, webdav) for independent lifecycle and update management",
-          "Engineered a strict WireGuard VPN kill-switch pod using Gluetun in servarr/ — qBittorrent, NZBGet, and Prowlarr are network-bound directly to the VPN container, eliminating IP leaks",
+          "Engineered a strict WireGuard VPN kill-switch pod using Gluetun in servarr/: qBittorrent, NZBGet, and Prowlarr are network-bound directly to the VPN container, eliminating IP leaks",
           "Implemented TRaSH Guides atomic hardlink storage structure across torrents and organized media libraries, enabling instant zero-copy file movement without duplicating storage",
           "Configured Cloudflare Zero Trust Tunnel (cloudflared) on dedicated cloudflare_tunnelnet bridge, exposing Vaultwarden, Immich, Kavita, Obsidian LiveSync, and WebDAV with zero open router ports",
           "Deployed Home Assistant on host network mode paired with a dedicated Python Matter controller container for local Thread and Wi-Fi smart home orchestration",
@@ -317,9 +317,9 @@ public class CanTelemetryDispatcher {
 
     {
       slug: "vexu",
-      title: "UC VEX U Robotics — Autonomous Odometry",
-      dates: "Apr 2025 – Present",
-      context: "Co-Founder · University of Cincinnati",
+      title: "UC VEX U Robotics | Autonomous Odometry",
+      dates: "Apr 2025 - Present",
+      context: "UC Robotics | Co-Founder",
       featured: false,
       summary:
         "Co-founded UC's collegiate VEX U team (C1NCY). Developed 3-wheel tracking odometry with sub-2 mm accuracy, IMU sensor fusion, and cascading PID motion control.",
@@ -364,9 +364,9 @@ struct Pose { double x = 0, y = 0, theta = 0; };
 class OdometryTracker {
     Pose pose;
     double last_L = 0, last_R = 0, last_B = 0;
-    const double TRACK   = 10.25;   // in — L/R wheel spacing
-    const double BACK_D  = 5.125;   // in — back wheel offset
-    const double IN_TICK = 0.01099; // in — 2.75" omni / 360 ticks
+    const double TRACK   = 10.25;   // in: L/R wheel spacing
+    const double BACK_D  = 5.125;   // in: back wheel offset
+    const double IN_TICK = 0.01099; // in: 2.75" omni / 360 ticks
 
 public:
     void update(double L, double R, double B, double imu_rad) {
@@ -410,22 +410,22 @@ public:
 
     {
       slug: "fpv",
-      title: "FPV Drone Building & Tuning",
-      dates: "2023 – Present",
-      context: "Personal Build / Hobby",
+      title: "FPV Drone Engineering & Tuning",
+      dates: "2023 - Present",
+      context: "FPV Drone Systems",
       featured: false,
       summary:
-        "Building FPV freestyle quads from scratch — from soldering 4-in-1 ESC stacks and flashing Betaflight to PID tuning, RPM filter setup, and DJI O4 Lite FPV system integration.",
+        "Assembling and tuning freestyle quadcopters from bare frames: fine-pitch soldering, Betaflight firmware configuration, Blackbox PID log analysis, and digital video integration.",
       tags: ["Betaflight", "PID Tuning", "ESC / BLHeli_32", "DJI O4 Lite", "Soldering", "RF & Antenna"],
       links: {},
       overview: {
         intro:
-          "FPV quad building is essentially applied embedded electronics — soldering fine-pitch motor pads, configuring DSHOT ESC protocols, flashing firmware, and iterating PID tune loops to dial in freestyle flight characteristics. I fly miniwhoops for proximity and have expanded into 3\" and 5\" freestyle builds.",
+          "FPV quad building is applied embedded electronics: soldering fine-pitch motor pads, configuring DSHOT ESC protocols, flashing Betaflight firmware, and iterating closed-loop PID filters against Blackbox logs. Flight builds range from 75mm indoor miniwhoops to 3\" and 5\" high-thrust freestyle platforms.",
         bullets: [
-          "Build quads from bare frames up; component selection (motors, props, FC/ESC stack), soldering, and final assembly",
+          "Build quads from bare frames up: component selection (motors, props, FC/ESC stack), soldering, and final bench test validation",
           "Configure Betaflight firmware: receiver protocol (ELRS), motor direction, ESC calibration via DSHOT300/600, and OSD layout",
-          "Tune PID loops iteratively using Blackbox flight log analysis; filtering RPM noise, dialing D-term, and setting rate profiles",
-          "Integrate DJI O3/O4 Lite FPV systems with UART MSP connection for OSD telemetry overlay",
+          "Tune PID loops iteratively using Blackbox flight log analysis: filtering RPM noise, dialing D-term, and setting rate profiles",
+          "Integrate DJI O3/O4 Lite digital video transmission with UART MSP connection for real-time OSD telemetry overlay",
           "Hold FAA Part 107 Remote Pilot Certificate; fly within all LAANC-authorized airspace requirements",
         ],
       },
@@ -444,9 +444,9 @@ public:
       code: {
         heading: "Configuration: Betaflight CLI Dump (Rates & Filtering)",
         intro:
-          "Betaflight exposes its full configuration as a CLI diff — this is an excerpt of the PID, rate, and RPM filter settings that define how the quad feels in the air. These are iterated against Blackbox logs after every flight session.",
+          "Betaflight exposes all parameters via CLI diff. This excerpt captures the PID, rate, and bidirectional DSHOT RPM filter settings dialed in through iterative Blackbox log analysis.",
         language: "bash",
-        snippet: `# Betaflight 4.5 — CLI diff (5" freestyle, Mateksys F722)
+        snippet: `# Betaflight 4.5 | CLI diff (5" freestyle, Mateksys F722)
 
 # -- RC Rates (Actual rates profile) --
 set roll_rc_rate = 180
@@ -505,7 +505,7 @@ set motor_pwm_protocol = DSHOT600`,
   // --------------------------------------------------------------------
   experience: [
     {
-      dateLines: ["May 2025 – Dec 2025", "May 2026 – Aug 2026"],
+      dateLines: ["May 2025 - Dec 2025", "May 2026 - Aug 2026"],
       title: "Controls Engineer",
       org: "Multi-Dimensional Integration, Shrewsbury, PA",
       bullets: [
@@ -516,7 +516,7 @@ set motor_pwm_protocol = DSHOT600`,
       ],
     },
     {
-      dateLines: ["Jun 2023 – Apr 2024"],
+      dateLines: ["Jun 2023 - Apr 2024"],
       title: "Indirect Shipping & Receiving Associate",
       org: "Cooper Standard Automotive, New Lexington, OH",
       bullets: [
@@ -531,7 +531,7 @@ set motor_pwm_protocol = DSHOT600`,
   // --------------------------------------------------------------------
   about: {
     paragraphs: [
-      "I'm a computer engineering student at the University of Cincinnati working through an accelerated Master's + Bachelor's program with a VLSI focus. I graduated valedictorian of my high school class while concurrently earning an Associate of Science.",
+      "I am a computer engineering student at the University of Cincinnati working through an accelerated Master's + Bachelor's dual degree with a VLSI focus. I graduated valedictorian of my high school class while concurrently earning an Associate of Science.",
       "Most of what I build lives at the hardware-software boundary: custom multi-layer PCBs, C++ firmware for ARM Cortex and RP2040 microcontrollers, real-time communication protocols (CAN, SPI, I2C, USB HID), and industrial SCADA systems. I hold an FAA Part 107 Remote Pilot Certificate and a Six Sigma Black Belt.",
     ],
     hobbies: [
@@ -544,23 +544,23 @@ set motor_pwm_protocol = DSHOT600`,
     education: [
       {
         degree: "Accelerated M.Eng. & B.S., Computer Engineering",
-        school: "University of Cincinnati — VLSI Focus",
+        school: "University of Cincinnati | VLSI Focus",
         detail: "3.93 GPA · Expected May 2029",
       },
       {
         degree: "A.S., General Science",
         school: "Hocking College",
-        detail: "3.99 GPA · 2022 – 2024",
+        detail: "3.99 GPA · 2022 - 2024",
       },
       {
         degree: "Honors Diploma",
         school: "New Lexington High School",
-        detail: "Valedictorian · 4.78 GPA · 2020 – 2024",
+        detail: "Valedictorian · 4.78 GPA · 2020 - 2024",
       },
     ],
     certifications: [
       "FAA Part 107 Remote Pilot Certificate",
-      "Six Sigma Black Belt — Project Management Institute (PMI)",
+      "Six Sigma Black Belt | Project Management Institute (PMI)",
     ],
     skills: [
       {
@@ -600,7 +600,7 @@ set motor_pwm_protocol = DSHOT600`,
   projectsPage: {
     eyebrow: "All work",
     heading: "Projects",
-    intro: "Engineering builds, infrastructure, and personal projects — hardware, firmware, and beyond.",
+    intro: "Engineering builds, infrastructure, and personal hardware-software projects across embedded systems, robotics, and cloud networking.",
   },
 };
 

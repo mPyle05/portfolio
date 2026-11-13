@@ -2,7 +2,7 @@ import "./style.css";
 import siteData from "./data.js";
 
 // ============================================================================
-//  RENDER ENGINE — Mason Pyle Portfolio
+//  RENDER ENGINE | Mason Pyle Portfolio
 //  Editorial Design & High-End Frontend Architecture
 // ============================================================================
 
@@ -225,9 +225,9 @@ function projectCardHtml(project) {
       <a href="/projects/${esc(project.slug)}/" class="absolute inset-0 z-10 rounded-xl" aria-label="View project: ${esc(project.title)}"></a>
 
       <div class="flex-1 flex flex-col gap-4">
-        <div class="flex items-start justify-between gap-2">
+        <div class="flex flex-wrap items-center justify-between gap-y-1.5 gap-x-2">
           <span class="font-mono text-[11px] text-ink-faint">${esc(project.dates)}</span>
-          <span class="font-mono text-[11px] text-copper bg-copper/10 border border-copper/20 px-2 py-0.5 rounded-md leading-none whitespace-nowrap">${esc(project.context)}</span>
+          <span class="font-mono text-[11px] text-copper bg-copper/10 border border-copper/20 px-2 py-0.5 rounded-md leading-none">${esc(project.context)}</span>
         </div>
         
         <h3 class="font-display font-semibold text-lg leading-snug text-ink group-hover:text-copper transition-colors">${esc(project.title)}</h3>
@@ -521,15 +521,15 @@ function getArchitectureSvg(slug) {
           <rect x="10" y="20" width="175" height="190" fill="#0E1217" stroke="#242A32" stroke-width="1.2" rx="6"/>
           <text x="97" y="42" fill="#E8E6E0" font-family="Space Grotesk" font-weight="600" text-anchor="middle" font-size="12">Sensors</text>
           
-          <rect x="25" y="52" width="145" height="38" fill="#080B0E" stroke="#6FA9B0" rx="3"/>
-          <text x="97" y="69" fill="#6FA9B0" text-anchor="middle">Parallel Encoders (×2)</text>
-          <text x="97" y="83" fill="#8B929B" text-anchor="middle">360 ticks/rev quadrature</text>
+          <rect x="22" y="52" width="150" height="38" fill="#080B0E" stroke="#6FA9B0" rx="3"/>
+          <text x="97" y="69" fill="#6FA9B0" text-anchor="middle">Parallel Encoders (2×)</text>
+          <text x="97" y="83" fill="#8B929B" text-anchor="middle">360 ticks/rev quad</text>
           
-          <rect x="25" y="98" width="145" height="38" fill="#080B0E" stroke="#6FA9B0" rx="3"/>
+          <rect x="22" y="98" width="150" height="38" fill="#080B0E" stroke="#6FA9B0" rx="3"/>
           <text x="97" y="115" fill="#6FA9B0" text-anchor="middle">Perpendicular Encoder</text>
           <text x="97" y="129" fill="#8B929B" text-anchor="middle">Lateral drift tracking</text>
           
-          <rect x="25" y="144" width="145" height="38" fill="#080B0E" stroke="#C98A4B" rx="3"/>
+          <rect x="22" y="144" width="150" height="38" fill="#080B0E" stroke="#C98A4B" rx="3"/>
           <text x="97" y="161" fill="#C98A4B" text-anchor="middle">3-Axis IMU Gyro</text>
           <text x="97" y="175" fill="#8B929B" text-anchor="middle">Heading fusion</text>
           
@@ -568,7 +568,7 @@ function getArchitectureSvg(slug) {
         <p class="font-mono text-[11px] text-ink-faint mb-4 uppercase tracking-wider">Proxmox Infrastructure · LXC Storage + Docker VM Architecture</p>
         <svg viewBox="0 0 820 220" class="w-full min-w-[640px] h-auto font-mono text-[10px]">
           <rect x="10" y="10" width="800" height="200" fill="#080B0E" stroke="#C98A4B" stroke-width="1.5" rx="8"/>
-          <text x="30" y="30" fill="#C98A4B" font-family="IBM Plex Mono" font-size="10">BARE METAL — Lenovo Desktop (x86_64) · Proxmox VE</text>
+          <text x="30" y="30" fill="#C98A4B" font-family="IBM Plex Mono" font-size="10">BARE METAL | Lenovo Desktop (x86_64) · Proxmox VE</text>
           
           <rect x="25" y="42" width="175" height="150" fill="#0E1217" stroke="#6FA9B0" stroke-width="1.2" rx="4"/>
           <text x="112" y="62" fill="#6FA9B0" text-anchor="middle" font-weight="600" font-family="Space Grotesk" font-size="11">LXC Container</text>
@@ -768,7 +768,7 @@ function getHomelabServicesGraphic() {
           <rect x="32" y="146" width="476" height="66" fill="#12161C" stroke="#6FA9B0" stroke-width="1" rx="4"/>
           <text x="45" y="165" fill="#6FA9B0" font-weight="600">Gluetun VPN Pod (WireGuard Killswitch Gateway)</text>
           <text x="45" y="183" fill="#E8E6E0">gluetun · qbittorrent · nzbget · prowlarr · flaresolverr</text>
-          <text x="45" y="199" fill="#8B929B">Downloaders bound to VPN namespace · Automatic killswitch protection</text>
+          <text x="45" y="199" fill="#8B929B">Downloaders bound to VPN namespace · Killswitch protection</text>
 
           <!-- PVR Coordinators -->
           <rect x="32" y="218" width="476" height="66" fill="#12161C" stroke="#242A32" stroke-width="1" rx="4"/>
@@ -779,7 +779,7 @@ function getHomelabServicesGraphic() {
           <!-- Homarr integration -->
           <rect x="32" y="290" width="476" height="58" fill="#12161C" stroke="#242A32" stroke-width="1" rx="4"/>
           <text x="45" y="309" fill="#E8E6E0" font-weight="600">homarr/ · Centralized Homelab Dashboard</text>
-          <text x="45" y="325" fill="#8B929B">Bridged to servarrnetwork for real-time telemetry, download stats &amp; health checks</text>
+          <text x="45" y="325" fill="#8B929B">servarrnetwork bridge · Real-time telemetry, stats &amp; health</text>
 
           <!-- Right: Local Services -->
           <rect x="532" y="118" width="288" height="242" fill="#080B0E" stroke="#6FA9B0" stroke-width="1.2" rx="6"/>
@@ -797,7 +797,7 @@ function getHomelabServicesGraphic() {
           <text x="556" y="271" fill="#E8E6E0" font-weight="600">home-assistant/ · Smart Home</text>
           <text x="556" y="289" fill="#50FA7B">Host Network Mode (mDNS Discovery)</text>
           <text x="556" y="307" fill="#8B929B">Python Matter Server (Thread/Wi-Fi)</text>
-          <text x="556" y="325" fill="#8B929B">Local IoT automation &amp; sensor coordinator</text>
+          <text x="556" y="325" fill="#8B929B">Local IoT automation &amp; sensor hub</text>
 
           <!-- BOTTOM: STORAGE ARCHITECTURE (TRaSH Guides Atomic Hardlinks) -->
           <rect x="20" y="372" width="800" height="72" fill="#0E1217" stroke="#C98A4B" stroke-width="1.2" rx="6"/>

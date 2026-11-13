@@ -1,4 +1,4 @@
-# Mason Pyle — Engineering Portfolio
+# Mason Pyle | Engineering Portfolio
 
 [![Vite](https://img.shields.io/badge/Vite-8.2+-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4+-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
@@ -118,4 +118,4 @@ The site is configured for automatic deployment via **GitHub Actions** (`.github
 
 ## 📄 License
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
