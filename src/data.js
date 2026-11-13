@@ -28,7 +28,7 @@ const siteData = {
     role: "Embedded Systems & Firmware Engineer",
     location: "Cincinnati, OH",
     tagline: "Cincinnati, OH · UC Accelerated M.Eng. & B.S. (VLSI Focus)",
-    email: "pylemd@mail.uc.edu",
+    email: "hello@masonpyle.com",
     resumeUrl: "/resume.pdf",
     resumeLocal: "/resume.pdf",
   },
