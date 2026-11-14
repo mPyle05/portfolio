@@ -23,15 +23,37 @@ const icons = {
 const esc = (str = "") =>
   String(str).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-// One-click copy with visual confirmation
+// One-click copy with visual confirmation and fallback
 window.copyToClipboard = (text, btn) => {
-  navigator.clipboard.writeText(text).then(() => {
+  const onSuccess = () => {
     if (!btn) return;
     const orig = btn.innerHTML;
     btn.innerHTML = `${icons.check}&ensp;<span class="text-[#50FA7B]">Copied</span>`;
     btn.disabled = true;
     setTimeout(() => { btn.innerHTML = orig; btn.disabled = false; }, 2000);
-  });
+  };
+
+  const execFallback = () => {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      onSuccess();
+    } catch (e) {
+      if (btn) btn.innerHTML = `<span class="text-amber-400">Failed to copy</span>`;
+    }
+  };
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(onSuccess).catch(execFallback);
+  } else {
+    execFallback();
+  }
 };
 
 // Resolves asset paths relative to public root in Vite
@@ -67,15 +89,17 @@ function highlightCode(code) {
     }
 
     return line.replace(
-      /(\/\/[^\n]*|#[^\n]*)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(\b0x[0-9a-fA-F]+\b|\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?(?:f|u|in|deg|ticks)?\b)|(\b[a-zA-Z_]\w*\b)/g,
-      (match, com, str, num, ident) => {
+      /(\/\/[^\n]*|#[^\n]*)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(\b0x[0-9a-fA-F]+\b|\b\d+(?:\.\d+)?(?:[eE][+-]?\d+)?(?:f|u|in|deg|ticks)?\b)|(\b[a-zA-Z_]\w*\b)|([<>&])/g,
+      (match, com, str, num, ident, punct) => {
         if (com) return `<span class="tok-com">${esc(com)}</span>`;
         if (str) return `<span class="tok-str">${esc(str)}</span>`;
         if (num) return `<span class="tok-num">${esc(num)}</span>`;
         if (ident) {
           if (keywords.has(ident)) return `<span class="tok-kw">${esc(ident)}</span>`;
           if (types.has(ident)) return `<span class="tok-type">${esc(ident)}</span>`;
+          return esc(ident);
         }
+        if (punct) return esc(punct);
         return esc(match);
       }
     );
@@ -86,6 +110,8 @@ function highlightCode(code) {
 function renderHeader() {
   const el = document.getElementById("site-header");
   if (!el) return;
+  const isProjectsPath = typeof window !== "undefined" && window.location.pathname.startsWith("/projects");
+
   el.className = "fixed top-0 left-0 right-0 z-50 glass-header";
   el.innerHTML = `
     <div class="container-site flex items-center justify-between py-4">
@@ -95,7 +121,10 @@ function renderHeader() {
       
       <!-- Desktop Navigation -->
       <nav class="site-nav hidden sm:flex items-center gap-7">
-        ${siteData.nav.map((l) => `<a href="${esc(l.href)}">${esc(l.label)}</a>`).join("")}
+        ${siteData.nav.map((l) => {
+          const isProj = isProjectsPath && l.href.startsWith("/projects");
+          return `<a href="${esc(l.href)}"${isProj ? ' class="is-active"' : ''}>${esc(l.label)}</a>`;
+        }).join("")}
       </nav>
 
       <div class="hidden sm:inline-flex items-center gap-3">
@@ -105,7 +134,7 @@ function renderHeader() {
       </div>
 
       <!-- Mobile Hamburger Toggle -->
-      <button id="mobile-menu-btn" class="sm:hidden flex items-center justify-center w-9 h-9 border border-line-soft bg-bg-raised/60 rounded-lg text-ink-dim hover:text-ink hover:border-copper transition-colors" aria-label="Toggle navigation menu">
+      <button id="mobile-menu-btn" class="sm:hidden flex items-center justify-center w-9 h-9 border border-line-soft bg-bg-raised/60 rounded-lg text-ink-dim hover:text-ink hover:border-copper transition-colors" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-nav">
         <span id="menu-icon-open">${icons.menu}</span>
         <span id="menu-icon-close" class="hidden">${icons.close}</span>
       </button>
@@ -113,7 +142,10 @@ function renderHeader() {
 
     <!-- Mobile Navigation Drawer -->
     <div id="mobile-nav" class="sm:hidden hidden border-t border-line-soft bg-bg/95 backdrop-blur-lg px-6 py-5 flex flex-col gap-4">
-      ${siteData.nav.map((l) => `<a href="${esc(l.href)}" class="mobile-nav-link text-ink-dim hover:text-copper text-sm font-medium py-1 no-underline transition-colors">${esc(l.label)}</a>`).join("")}
+      ${siteData.nav.map((l) => {
+        const isProj = isProjectsPath && l.href.startsWith("/projects");
+        return `<a href="${esc(l.href)}" class="mobile-nav-link ${isProj ? 'text-copper font-semibold' : 'text-ink-dim hover:text-copper'} text-sm font-medium py-1 no-underline transition-colors">${esc(l.label)}</a>`;
+      }).join("")}
       <div class="pt-3 border-t border-line-soft flex items-center justify-between">
         <a href="mailto:${esc(siteData.person.email)}" class="btn btn-primary text-xs py-2 px-4 w-full justify-center">
           Get in touch &rarr;
@@ -135,10 +167,12 @@ function renderHeader() {
         mobileNav.classList.remove("hidden");
         iconOpen.classList.add("hidden");
         iconClose.classList.remove("hidden");
+        menuBtn.setAttribute("aria-expanded", "true");
       } else {
         mobileNav.classList.add("hidden");
         iconOpen.classList.remove("hidden");
         iconClose.classList.add("hidden");
+        menuBtn.setAttribute("aria-expanded", "false");
       }
     };
 
@@ -148,6 +182,7 @@ function renderHeader() {
         mobileNav.classList.add("hidden");
         iconOpen.classList.remove("hidden");
         iconClose.classList.add("hidden");
+        menuBtn.setAttribute("aria-expanded", "false");
       });
     });
   }
@@ -221,22 +256,22 @@ function renderHero() {
                 <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)] animate-pulse"></span>
                 <span class="text-[11px] text-ink font-medium tracking-wide">mason@dev-box: ~ (zsh)</span>
               </div>
-              <div class="flex items-center gap-1.5" aria-hidden="true">
-                <button type="button" class="w-2.5 h-2.5 rounded-full bg-[#363E4A] hover:bg-[#E06C75] transition-colors cursor-pointer border-0 p-0 focus:outline-none" title="Clear buffer" id="term-btn-close"></button>
-                <button type="button" class="w-2.5 h-2.5 rounded-full bg-[#363E4A] hover:bg-[#E5C07B] transition-colors cursor-pointer border-0 p-0 focus:outline-none" title="Reset height" id="term-btn-min"></button>
-                <button type="button" class="w-2.5 h-2.5 rounded-full bg-[#363E4A] hover:bg-[#98C379] transition-colors cursor-pointer border-0 p-0 focus:outline-none" title="Toggle expand" id="term-btn-max"></button>
+              <div class="flex items-center gap-1.5">
+                <button type="button" class="w-2.5 h-2.5 rounded-full bg-[#363E4A] hover:bg-[#E06C75] transition-colors cursor-pointer border-0 p-0 focus:outline-none" title="Clear buffer" aria-label="Clear terminal buffer" id="term-btn-close"></button>
+                <button type="button" class="w-2.5 h-2.5 rounded-full bg-[#363E4A] hover:bg-[#E5C07B] transition-colors cursor-pointer border-0 p-0 focus:outline-none" title="Reset height" aria-label="Reset terminal height" id="term-btn-min"></button>
+                <button type="button" class="w-2.5 h-2.5 rounded-full bg-[#363E4A] hover:bg-[#98C379] transition-colors cursor-pointer border-0 p-0 focus:outline-none" title="Toggle expand" aria-label="Toggle terminal expand" id="term-btn-max"></button>
               </div>
             </div>
 
             <!-- Quick Run Command Chips -->
-            <div class="flex flex-wrap items-center gap-1.5 px-3.5 py-2 bg-[#090C10] border-b border-line-soft text-[10px]">
-              <span class="text-ink-faint mr-1 font-medium select-none">Quick:</span>
-              <button type="button" class="term-chip term-chip-cyan" data-cmd="cat skills.md">cat skills.md</button>
-              <button type="button" class="term-chip term-chip-copper" data-cmd="ls -la /projects">ls -la /projects</button>
-              <button type="button" class="term-chip term-chip-emerald" data-cmd="whoami">whoami</button>
-              <button type="button" class="term-chip term-chip-cyan" data-cmd="pinout">pinout</button>
-              <button type="button" class="term-chip term-chip-copper" data-cmd="dmesg">dmesg</button>
-              <button type="button" class="term-chip hover:border-line-hover text-ink-faint hover:text-ink" data-cmd="clear">clear</button>
+            <div class="flex items-center gap-1.5 px-3.5 py-2 bg-[#090C10] border-b border-line-soft text-[10px] overflow-x-auto flex-nowrap term-scrollbar select-none">
+              <span class="text-ink-faint mr-1 font-medium shrink-0">Quick:</span>
+              <button type="button" class="term-chip term-chip-cyan shrink-0" data-cmd="cat skills.md">cat skills.md</button>
+              <button type="button" class="term-chip term-chip-copper shrink-0" data-cmd="ls -la /projects">ls -la /projects</button>
+              <button type="button" class="term-chip term-chip-emerald shrink-0" data-cmd="whoami">whoami</button>
+              <button type="button" class="term-chip term-chip-cyan shrink-0" data-cmd="pinout">pinout</button>
+              <button type="button" class="term-chip term-chip-copper shrink-0" data-cmd="dmesg">dmesg</button>
+              <button type="button" class="term-chip hover:border-line-hover text-ink-faint hover:text-ink shrink-0" data-cmd="clear">clear</button>
             </div>
 
             <!-- Terminal Scroll Body -->
@@ -247,7 +282,7 @@ function renderHero() {
               <!-- Active Input Prompt Line -->
               <div class="flex items-center gap-1.5 pt-1" id="hero-term-prompt-line">
                 <span class="text-emerald-400 font-semibold shrink-0">mason@dev-box</span><span class="text-cyan shrink-0">:~</span><span class="text-ink shrink-0">$</span>
-                <input id="hero-term-input" type="text" placeholder="type 'help', 'cat skills.md'..." class="bg-transparent border-none outline-none text-ink flex-1 font-mono text-[11px] sm:text-[12px] p-0 focus:ring-0 caret-cyan" autocomplete="off" spellcheck="false" />
+                <input id="hero-term-input" type="text" placeholder="type 'help', 'cat skills.md'..." aria-label="Interactive terminal command input" class="bg-transparent border-none outline-none text-ink flex-1 font-mono text-[11px] sm:text-[12px] p-0 focus:ring-0 caret-cyan" autocomplete="off" spellcheck="false" />
               </div>
             </div>
 
@@ -1875,17 +1910,20 @@ renderProjectDetail();
 injectAnalytics();
 
 // Active nav on scroll (home page only)
-const sections = document.querySelectorAll("main [id]");
-if ("IntersectionObserver" in window && sections.length) {
-  const obs = new IntersectionObserver(
-    (entries) => entries.forEach((e) => {
-      if (e.isIntersecting && e.target.id) {
-        document.querySelectorAll(".site-nav a").forEach((a) => {
-          a.classList.toggle("is-active", a.getAttribute("href") === `/#${e.target.id}`);
-        });
-      }
-    }),
-    { rootMargin: "-35% 0px -35% 0px", threshold: 0 }
-  );
-  sections.forEach((s) => obs.observe(s));
+const isProjectsRoute = typeof window !== "undefined" && window.location.pathname.startsWith("/projects");
+if (!isProjectsRoute) {
+  const sections = document.querySelectorAll("main [id]");
+  if ("IntersectionObserver" in window && sections.length) {
+    const obs = new IntersectionObserver(
+      (entries) => entries.forEach((e) => {
+        if (e.isIntersecting && e.target.id) {
+          document.querySelectorAll(".site-nav a").forEach((a) => {
+            a.classList.toggle("is-active", a.getAttribute("href") === `/#${e.target.id}`);
+          });
+        }
+      }),
+      { rootMargin: "-35% 0px -35% 0px", threshold: 0 }
+    );
+    sections.forEach((s) => obs.observe(s));
+  }
 }

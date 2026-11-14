@@ -253,4 +253,46 @@
   .term-link {
     @apply text-cyan hover:text-copper cursor-pointer underline transition-colors duration-150 decoration-cyan/40;
   }
+
+  /* ==========================================================================
+     PRINT STYLESHEET (Clean PDF / Paper Resume Rendering)
+     ========================================================================== */
+  @media print {
+    body {
+      background: #FFFFFF !important;
+      color: #111827 !important;
+    }
+    .grid-overlay,
+    .glass-header,
+    #site-header,
+    .term-window,
+    .term-scanlines,
+    .btn,
+    .skip-link {
+      display: none !important;
+    }
+    main {
+      padding-top: 0 !important;
+    }
+    .container-site {
+      max-width: 100% !important;
+      padding: 0 !important;
+    }
+    .card-elevated,
+    .contact-item {
+      border-color: #E5E7EB !important;
+      background: #FFFFFF !important;
+      box-shadow: none !important;
+      break-inside: avoid;
+    }
+    h1, h2, h3, h4 {
+      color: #000000 !important;
+    }
+    p, li, span {
+      color: #374151 !important;
+    }
+    .tok-kw, .tok-fn, .tok-str, .tok-num, .tok-type {
+      color: #111827 !important;
+    }
+  }
 }
