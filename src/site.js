@@ -174,7 +174,7 @@ function renderFooter() {
   `;
 }
 
-// ---- hero with ambient radial glow & editorial layout -----------------------
+// ---- hero with 2-column layout & interactive developer terminal ------------
 function renderHero() {
   const el = document.getElementById("hero-root");
   if (!el) return;
@@ -187,28 +187,852 @@ function renderHero() {
       <!-- Ambient Radial Glow Backdrop (Linear/Vercel aesthetic) -->
       <div class="absolute -top-32 -left-20 w-[420px] sm:w-[680px] h-[420px] sm:h-[680px] bg-gradient-to-br from-copper/15 via-cyan/10 to-transparent rounded-full blur-[120px] pointer-events-none -z-10" aria-hidden="true"></div>
 
-      <!-- Main editorial content -->
-      <div class="relative max-w-3xl">
-        <div class="inline-flex items-center gap-2 font-mono text-xs text-copper bg-copper/10 border border-copper/20 px-3 py-1 rounded-full mb-8">
-          <span class="w-1.5 h-1.5 rounded-full bg-copper animate-pulse"></span>
-          ${esc(person.tagline)}
+      <!-- 2-Column Hero Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 xl:gap-14 items-center">
+
+        <!-- Left Column: Editorial & Bio -->
+        <div class="relative">
+          <div class="inline-flex items-center gap-2 font-mono text-xs text-copper bg-copper/10 border border-copper/20 px-3 py-1 rounded-full mb-8">
+            <span class="w-1.5 h-1.5 rounded-full bg-copper animate-pulse"></span>
+            ${esc(person.tagline)}
+          </div>
+          
+          <h1 class="font-display font-semibold text-5xl sm:text-6xl lg:text-[72px] leading-[1.05] tracking-tight mb-7 text-ink">${esc(hero.heading)}</h1>
+          <p class="text-xl sm:text-2xl font-medium text-ink leading-snug max-w-[34ch] mb-6">${esc(hero.subheading)}</p>
+          <p class="text-base text-ink-dim leading-relaxed max-w-[54ch] mb-8">${esc(hero.paragraph)}</p>
+          
+          <div class="flex flex-wrap gap-3 items-center">
+            <a class="btn btn-primary gap-2" href="${esc(resumeHref)}" target="_blank" rel="noopener">
+              ${icons.download} ${esc(hero.primaryCta.label)}
+            </a>
+            <button class="btn btn-ghost gap-2" onclick="copyToClipboard('${esc(person.email)}', this)">
+              ${icons.copy} Copy email
+            </button>
+          </div>
         </div>
-        
-        <h1 class="font-display font-semibold text-5xl sm:text-6xl lg:text-[76px] leading-[1.05] tracking-tight mb-7 text-ink">${esc(hero.heading)}</h1>
-        <p class="text-xl sm:text-2xl font-medium text-ink leading-snug max-w-[34ch] mb-6">${esc(hero.subheading)}</p>
-        <p class="text-base text-ink-dim leading-relaxed max-w-[54ch] mb-10">${esc(hero.paragraph)}</p>
-        
-        <div class="flex flex-wrap gap-3 items-center">
-          <a class="btn btn-primary gap-2" href="${esc(resumeHref)}" target="_blank" rel="noopener">
-            ${icons.download} ${esc(hero.primaryCta.label)}
-          </a>
-          <button class="btn btn-ghost gap-2" onclick="copyToClipboard('${esc(person.email)}', this)">
-            ${icons.copy} Copy email
-          </button>
+
+        <!-- Right Column: Interactive Multi-Line Developer Terminal -->
+        <div class="relative w-full max-w-lg mx-auto lg:max-w-none">
+          <div class="term-window term-scanlines bg-[#05070A] border border-line/80 rounded-xl overflow-hidden font-mono text-xs">
+            
+            <!-- Minimalist Linux / Alacritty Window Header -->
+            <div class="flex items-center justify-between px-4 py-2.5 bg-[#0C1015] border-b border-line select-none border-t border-white/[0.04]">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)] animate-pulse"></span>
+                <span class="text-[11px] text-ink font-medium tracking-wide">mason@dev-box: ~ (zsh)</span>
+              </div>
+              <div class="flex items-center gap-1.5" aria-hidden="true">
+                <button type="button" class="w-2.5 h-2.5 rounded-full bg-[#363E4A] hover:bg-[#E06C75] transition-colors cursor-pointer border-0 p-0 focus:outline-none" title="Clear buffer" id="term-btn-close"></button>
+                <button type="button" class="w-2.5 h-2.5 rounded-full bg-[#363E4A] hover:bg-[#E5C07B] transition-colors cursor-pointer border-0 p-0 focus:outline-none" title="Reset height" id="term-btn-min"></button>
+                <button type="button" class="w-2.5 h-2.5 rounded-full bg-[#363E4A] hover:bg-[#98C379] transition-colors cursor-pointer border-0 p-0 focus:outline-none" title="Toggle expand" id="term-btn-max"></button>
+              </div>
+            </div>
+
+            <!-- Quick Run Command Chips -->
+            <div class="flex flex-wrap items-center gap-1.5 px-3.5 py-2 bg-[#090C10] border-b border-line-soft text-[10px]">
+              <span class="text-ink-faint mr-1 font-medium select-none">Quick:</span>
+              <button type="button" class="term-chip term-chip-cyan" data-cmd="cat skills.md">cat skills.md</button>
+              <button type="button" class="term-chip term-chip-copper" data-cmd="ls -la /projects">ls -la /projects</button>
+              <button type="button" class="term-chip term-chip-emerald" data-cmd="whoami">whoami</button>
+              <button type="button" class="term-chip term-chip-cyan" data-cmd="pinout">pinout</button>
+              <button type="button" class="term-chip term-chip-copper" data-cmd="dmesg">dmesg</button>
+              <button type="button" class="term-chip hover:border-line-hover text-ink-faint hover:text-ink" data-cmd="clear">clear</button>
+            </div>
+
+            <!-- Terminal Scroll Body -->
+            <div id="hero-term-body" class="term-scrollbar p-4 h-64 sm:h-72 lg:h-[320px] overflow-y-auto space-y-2.5 text-[11px] sm:text-[12px] leading-relaxed text-ink-dim select-text transition-[height] duration-200">
+              <div class="text-ink-faint text-[10px] select-none">Mason Pyle Developer Environment | Type 'help' or click quick chips</div>
+              <div id="hero-term-history" class="space-y-2.5"></div>
+              
+              <!-- Active Input Prompt Line -->
+              <div class="flex items-center gap-1.5 pt-1" id="hero-term-prompt-line">
+                <span class="text-emerald-400 font-semibold shrink-0">mason@dev-box</span><span class="text-cyan shrink-0">:~</span><span class="text-ink shrink-0">$</span>
+                <input id="hero-term-input" type="text" placeholder="type 'help', 'cat skills.md'..." class="bg-transparent border-none outline-none text-ink flex-1 font-mono text-[11px] sm:text-[12px] p-0 focus:ring-0 caret-cyan" autocomplete="off" spellcheck="false" />
+              </div>
+            </div>
+
+            <!-- Terminal Status Footer -->
+            <div class="px-4 py-1.5 bg-[#0C1015] border-t border-line flex items-center justify-between text-[10px] text-ink-faint">
+              <span class="flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.5)]"></span> Session: Active
+              </span>
+              <span>UTF-8 | tty1</span>
+            </div>
+
+          </div>
         </div>
+
       </div>
     </div>
   `;
+
+  initHeroTerminal();
+}
+
+// ---- interactive multi-line hero developer terminal -----------------------
+function initHeroTerminal() {
+  const historyEl = document.getElementById("hero-term-history");
+  const inputEl = document.getElementById("hero-term-input");
+  const bodyEl = document.getElementById("hero-term-body");
+  if (!historyEl || !inputEl || !bodyEl) return;
+
+  // Embedded project specifications
+  const PROJECT_SPECS = {
+    keyboard: `================================================================================
+PROJECT: RP2040 Custom Mechanical Keyboard
+CONTEXT: Hardware & Firmware | Dec 2024 - Jan 2026
+STACK:   CircuitPython | KMK Firmware | RP2040 | KiCad PCB | NeoPixel RGB | CAD
+================================================================================
+
+OVERVIEW:
+Custom 91-key mechanical keyboard engineered from bare PCB schematic to firmware:
+* 10-row x 9-column diode matrix with 1N4148 diodes (COL2ROW) for 100% anti-ghosting.
+* 82-pixel addressable NeoPixel chain driven at 60 Hz over RP2040 GPIO SDA.
+* Custom MovingGradient procedural animation class extending KMK AnimationModes.
+* Multi-layer KMK firmware keymaps: momentary navigation layer, RGB controls, function keys.
+* Two-piece precision enclosure and switch plate modeled in CAD with acoustic dampening.
+
+HARDWARE & FIRMWARE SPECS:
+* Microcontroller: Raspberry Pi RP2040 Dual ARM Cortex-M0+ (CircuitPython runtime)
+* Matrix Layout:   10 Rows x 9 Columns (91 key positions across 19 dedicated GPIOs)
+* Diode Logic:     COL2ROW 1N4148 surface-mount diodes
+* RGB Backlight:   82 addressable NeoPixels @ 60 Hz refresh rate
+* Firmware Stack:  KMK Keyboard Framework + Custom procedural RGB extensions
+* Enclosure:       Two-piece custom CAD enclosure toleranced for switch retention
+
+SOURCE EXCERPT (firmware/code.py):
+  rgb = RGB(pixel_pin=b.SDA, num_pixels=82, val_default=100, refresh_rate=60)
+  keyboard.col_pins = (b.D9, b.A3, b.A2, b.A1, b.A0, b.SCK, b.MISO, b.MOSI, b.D10)
+  keyboard.row_pins = (b.D0, b.D1, b.D2, b.D3, b.D4, b.D5, b.D6, b.D7, b.D8, b.SCL)
+  keyboard.diode_orientation = DiodeOrientation.COL2ROW`,
+
+    "solar-car": `================================================================================
+PROJECT: Bearcat Solar Car | Low-Voltage Systems
+CONTEXT: American Solar Challenge | UC Racing | Aug 2024 - Present
+STACK:   CAN 2.0B | Embedded C# | KiCad | Safety-Critical | Telemetry | ARM
+================================================================================
+
+OVERVIEW:
+Lead embedded software development for all low-voltage electronics on UC solar racer:
+* Architected CAN 2.0B network operating at 500 kbps over 1,500+ miles of highway racing.
+* CAN frame deserializer with timeout heartbeats, CRC parity validation, and thermal checks.
+* Watchdog timer (250 ms timeout) triggering hardware fail-safe HV discharge if BMS packets stall.
+* Low-voltage power distribution and lighting controller PCBs designed with Infineon PROFET switches.
+* Real-time hardware-in-the-loop telemetry logging on Linux gateways for trackside race strategy.
+
+HARDWARE & FIRMWARE SPECS:
+* Bus Protocol:    CAN 2.0B @ 500 kbps (120-ohm terminated differential twisted pair)
+* Telemetry Rate:  50 Hz critical BMS broadcast | 10 Hz auxiliary sensor broadcast
+* Safety Systems:  Heartbeat watchdog timer with hardware fail-safe HV discharge interlock
+* Driver Cockpit:  SPI-driven high-contrast driver HUD instrument cluster
+* Isolation:       Galvanically isolated logic-to-inverter barrier protecting LV electronics
+
+SOURCE EXCERPT (telemetry/CanDispatcher.cs):
+  public void OnCanFrame(uint id, byte[] data, byte dlc) {
+      if (id == ID_BMS_VOLTS) {
+          _latest.TotalVoltage = ((data[0] << 8) | data[1]) * 0.1f;
+          _watchdog.Restart();
+      }
+  }`,
+
+    homelab: `================================================================================
+PROJECT: Self-Hosted Home Lab Infrastructure
+CONTEXT: Production Proxmox VE & Docker Fleet | 2024 - Present
+STACK:   Proxmox VE | Docker Compose | WireGuard | Cloudflare Tunnel | Linux
+================================================================================
+
+OVERVIEW:
+Modular, production-grade self-hosted infrastructure running on Proxmox VE:
+* 10 decoupled Docker Compose directory stacks for independent lifecycle and update management.
+* Cloudflare Zero Trust Tunnel routing encrypted ingress with zero open router ports.
+* Strict WireGuard VPN kill-switch pod (Gluetun) isolating media downloaders from host network.
+* TRaSH Guides atomic hardlink architecture: instant zero-copy file movement across ZFS datasets.
+* Passed through host GPU acceleration (/dev/dri) to Jellyfin for real-time 4K/HDR transcoding.
+* Home Assistant deployed on host networking with Python Matter controller for Thread and Wi-Fi IoT.
+
+SYSTEM & ARCHITECTURE SPECS:
+* Hypervisor:      Proxmox VE bare-metal on Lenovo desktop (x86_64)
+* Storage Subsys:  ZFS storage pool managed via LXC bind-mount (TRaSH atomic hardlinks)
+* Container Fleet: 10 decoupled stacks (cloudflare, homarr, home-assistant, immich,
+                   jellyfin, kavita, obsidian, servarr, vaultwarden, webdav)
+* Network Sec:     Zero open inbound router ports | Cloudflare Zero Trust tunnel ingress
+* VPN Isolation:   WireGuard namespace killswitch container binding qBittorrent & Prowlarr
+* Hardware Accel:  Direct GPU pass-through (/dev/dri) for hardware video transcode`,
+
+    vexu: `================================================================================
+PROJECT: UC VEX U Robotics | Autonomous Odometry (C1NCY)
+CONTEXT: UC Collegiate Robotics | Co-Founder & Programming Lead | Apr 2025 - Present
+STACK:   C++ | Odometry | Sensor Fusion | PID Control | State Machines | Autonomy
+================================================================================
+
+OVERVIEW:
+Co-founded UC's first collegiate VEX U team and engineered technical chassis autonomy:
+* 3-wheel tracking odometry (2 forward, 1 lateral) achieving <2 mm positional accuracy.
+* Sensor fusion: 360 ticks/rev quadrature encoders fused with 3-axis IMU gyro via complementary filter.
+* Cascading PID controllers with slew-rate limiting for heading stabilization and trajectory following.
+* Asynchronous 100 Hz RTOS odometry loop managing chassis kinematics, intake, and pneumatics.
+* Served as co-founder, programming lead, and treasurer managing team budget and university compliance.
+
+TECHNICAL SPECS:
+* Resolution:      360 ticks/rev quadrature (0.28 mm per tick tracking precision)
+* Odometry Rate:   100 Hz dedicated background thread (10 ms period)
+* Heading Hold:    +/-0.5 deg accuracy over 45-second autonomous run via IMU gyro fusion
+* Motion Control:  Dual closed-loop PID (translation displacement + angular heading correction)
+* Role:            Co-Founder, Programming Lead & Club Treasurer
+
+SOURCE EXCERPT (odometry/odometry_tracker.cpp):
+  double dTheta = (dL - dR) / TRACK;
+  double avg = pose.theta + dTheta * 0.5;
+  pose.x += dy_local * std::sin(avg) + dx_local * std::cos(avg);
+  pose.y += dy_local * std::cos(avg) - dx_local * std::sin(avg);
+  pose.theta = imu_rad; // fuse with IMU gyro`,
+
+    fpv: `================================================================================
+PROJECT: FPV Drone Engineering & Tuning
+CONTEXT: FPV Drone Systems & High-Thrust Avionics | 2023 - Present
+STACK:   Betaflight | PID Tuning | ESC / BLHeli_32 | DJI O4 Lite | Soldering | RF
+================================================================================
+
+OVERVIEW:
+Assembling, soldering, configuring, and flight-tuning freestyle quadcopters from bare frames:
+* Custom airframes: 75mm 1S brushless miniwhoop, 3-inch deadcat, and 5-inch freestyle quad.
+* Configured Betaflight 4.5: bidirectional DSHOT600, RPM notch filtering, and dynamic harmonics.
+* Iterative PID loop tuning and flight performance verification via Blackbox flight log analysis.
+* Integrated DJI O4 Lite digital HD video transmission over UART MSP for low-latency OSD telemetry.
+* Holds FAA Part 107 Remote Pilot Certificate; operates within all authorized airspace limits.
+
+AVIONICS & RADIO SPECS:
+* Flight Stack:    Mateksys 3-in-1 FC / ESC stack (ARM Cortex-M7 / STM32F722 target)
+* Motor Protocol:  Bidirectional DSHOT600 with RPM telemetry feedback to flight controller
+* Digital Video:   DJI O4 Lite (1080p @ 120 fps or 4K @ 60 fps, ~35 ms latency)
+* Radio Link:      ExpressLRS (ELRS) 2.4 GHz packet rate @ 500 Hz
+* Data Analysis:   Betaflight Blackbox Explorer FFT noise filtering and step response analysis
+
+CONFIG EXCERPT (betaflight_cli_diff.txt):
+  set dshot_bidir = ON
+  set rpm_filter_harmonics = 3
+  set dyn_notch_count = 3
+  set motor_pwm_protocol = DSHOT600`,
+  };
+
+  const SKILLS_OUTPUT = `<div class="space-y-1.5 font-mono text-[11px] leading-relaxed select-text">
+<div class="text-ink font-semibold">ENGINEERING SKILLS MATRIX | MASON PYLE</div>
+<div class="text-ink-dim text-[10.5px]">Embedded Systems &amp; Firmware Engineer | UC Accelerated M.Eng. &amp; B.S. (VLSI)</div>
+<div class="border-t border-line-soft my-1"></div>
+<div><span class="text-copper font-semibold">[FIRMWARE]</span>   Bare-Metal C/C++, FreeRTOS, RP2040, ARM Cortex-M, CircuitPython/KMK</div>
+<div><span class="text-cyan font-semibold">[PROTOCOLS]</span>  CAN 2.0B, SPI, I2C, UART, USB HID, Zero-Copy Atomic Hardlinks</div>
+<div><span class="text-emerald-400 font-semibold">[HARDWARE]</span>   KiCad Multi-Layer PCB Routing, Anti-Ghosting Diode Logic, Oscilloscopes</div>
+<div><span class="text-ink font-semibold">[INFRA]</span>      Proxmox VE, Docker Compose, WireGuard VPN Killswitch, Cloudflare Tunnel</div>
+</div>`;
+
+  const LS_PROJECTS_OUTPUT = `<div class="flex flex-wrap gap-4 font-mono text-[11px] select-text">
+  <button type="button" class="term-link font-semibold text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0" data-cmd="cat projects/solar-car">solar-car/</button>
+  <button type="button" class="term-link font-semibold text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0" data-cmd="cat projects/keyboard">keyboard/</button>
+  <button type="button" class="term-link font-semibold text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0" data-cmd="cat projects/homelab">homelab/</button>
+  <button type="button" class="term-link font-semibold text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0" data-cmd="cat projects/vexu">vexu/</button>
+  <button type="button" class="term-link font-semibold text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0" data-cmd="cat projects/fpv">fpv/</button>
+</div>`;
+
+  const LS_LA_PROJECTS_OUTPUT = `<div class="space-y-1 font-mono text-[11px] leading-snug select-text">
+<div class="text-ink-faint">total 20</div>
+<div>drwxr-xr-x 7 mason staff 224 Nov 14 00:00 .</div>
+<div>drwxr-xr-x 3 mason staff  96 Nov 14 00:00 ..</div>
+<div>drwxr-xr-x 2 mason staff  64 Nov 14 00:00 <button type="button" class="term-link font-semibold text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0" data-cmd="cat projects/keyboard">keyboard/</button>    | RP2040 10x9 Matrix + 82 NeoPixels (CircuitPython/KMK)</div>
+<div>drwxr-xr-x 2 mason staff  64 Nov 14 00:00 <button type="button" class="term-link font-semibold text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0" data-cmd="cat projects/solar-car">solar-car/</button>   | Bearcat Solar Car | Low-Voltage CAN 2.0B Bus</div>
+<div>drwxr-xr-x 2 mason staff  64 Nov 14 00:00 <button type="button" class="term-link font-semibold text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0" data-cmd="cat projects/homelab">homelab/</button>     | Proxmox VE + 10 Decoupled Docker Compose Stacks</div>
+<div>drwxr-xr-x 2 mason staff  64 Nov 14 00:00 <button type="button" class="term-link font-semibold text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0" data-cmd="cat projects/vexu">vexu/</button>        | UC VEX U Robotics | 3-Wheel Tracking Odometry (100 Hz)</div>
+<div>drwxr-xr-x 2 mason staff  64 Nov 14 00:00 <button type="button" class="term-link font-semibold text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0" data-cmd="cat projects/fpv">fpv/</button>         | Freestyle Quadcopters | Betaflight PID Tuning</div>
+<div class="pt-1.5 text-[10px] text-ink-faint select-none">Tip: Click any directory name or run 'cat projects/&lt;name&gt;' to view spec.</div>
+</div>`;
+
+  const LS_ROOT_OUTPUT = `<div class="flex flex-wrap gap-4 font-mono text-[11px] select-text">
+  <button type="button" class="term-link font-semibold text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0" data-cmd="ls -la /projects">projects/</button>
+  <button type="button" class="term-link font-semibold text-ink hover:text-copper cursor-pointer underline bg-transparent border-0 p-0" data-cmd="cat skills.md">skills.md</button>
+  <a href="/resume.pdf" target="_blank" rel="noopener" class="term-link font-semibold text-copper hover:underline">resume.pdf</a>
+  <button type="button" class="term-link font-semibold text-emerald-400 hover:text-copper cursor-pointer underline bg-transparent border-0 p-0" data-cmd="pinout">pinout.txt</button>
+</div>`;
+
+  const WHOAMI_OUTPUT = `<div class="space-y-1 font-mono text-[11px] leading-relaxed select-text">
+<div><span class="text-ink font-semibold">User:</span>        mason (UID: 1000, GID: 1000)</div>
+<div><span class="text-ink font-semibold">Host:</span>        dev-box (Debian GNU/Linux 12)</div>
+<div><span class="text-ink font-semibold">Full Name:</span>   Mason Pyle</div>
+<div><span class="text-ink font-semibold">Role:</span>        Embedded Systems &amp; Firmware Engineer</div>
+<div><span class="text-ink font-semibold">Location:</span>    Cincinnati, OH</div>
+<div><span class="text-ink font-semibold">University:</span>  University of Cincinnati | Accelerated M.Eng. &amp; B.S. in Computer Engineering</div>
+<div><span class="text-ink font-semibold">Focus:</span>       VLSI Design &amp; Hardware-Software Co-Design (3.93 GPA | Expected May 2029)</div>
+<div><span class="text-ink font-semibold">Credentials:</span> FAA Part 107 Remote Pilot | Six Sigma Black Belt (PMI)</div>
+<div><span class="text-ink font-semibold">Email:</span>       <a href="mailto:hello@masonpyle.com" class="text-cyan hover:text-copper underline">hello@masonpyle.com</a></div>
+<div><span class="text-ink font-semibold">GitHub:</span>      <a href="https://github.com/mPyle05" target="_blank" rel="noopener" class="text-cyan hover:text-copper underline">https://github.com/mPyle05</a></div>
+<div><span class="text-ink font-semibold">LinkedIn:</span>    <a href="https://linkedin.com/in/mason-pyle" target="_blank" rel="noopener" class="text-cyan hover:text-copper underline">https://linkedin.com/in/mason-pyle</a></div>
+<div><span class="text-ink font-semibold">Status:</span>      Open to Embedded Systems / Firmware Co-ops &amp; Engineering Roles</div>
+</div>`;
+
+  const DMESG_OUTPUT = `<div class="space-y-0.5 font-mono text-[11px] leading-snug select-text">
+<div><span class="text-emerald-400">[    0.000000]</span> Linux version 6.8.0-45-embedded (gcc 13.2.0) #45-Ubuntu SMP PREEMPT_DYNAMIC</div>
+<div><span class="text-emerald-400">[    0.000001]</span> Command line: BOOT_IMAGE=/vmlinuz-6.8.0 root=UUID=mpyle-dev ro quiet console=tty0</div>
+<div><span class="text-emerald-400">[    0.000004]</span> x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'</div>
+<div><span class="text-emerald-400">[    0.312048]</span> clocksource: tsc-early: mask: 0xffffffffffffffff max_cycles: 0x3344556677</div>
+<div><span class="text-emerald-400">[    0.684210]</span> pci 0000:00:14.0: xHCI Host Controller (USB 3.0) registered</div>
+<div><span class="text-emerald-400">[    1.120455]</span> usb 1-1.2: New USB device found, idVendor=2e8a, idProduct=0003, bcdDevice= 1.00</div>
+<div><span class="text-emerald-400">[    1.120462]</span> usb 1-1.2: Product: Raspberry Pi RP2040 Bootloader / CDC-ACM</div>
+<div><span class="text-emerald-400">[    1.121890]</span> cdc_acm 1-1.2:1.0: ttyACM0: USB ACM device (RP2040 Dual Cortex-M0+ Debug Console)</div>
+<div><span class="text-emerald-400">[    1.450112]</span> can: controller area network core</div>
+<div><span class="text-emerald-400">[    1.450150]</span> can: raw protocol</div>
+<div><span class="text-emerald-400">[    1.482090]</span> mcp251xfd spi0.0 can0: MCP2518FD rev 0x01 initialized (CAN 2.0B @ 500 kbps)</div>
+<div><span class="text-emerald-400">[    1.482105]</span> can0: bit-timing: prop_seg=4, phase_seg1=5, phase_seg2=6, sjw=1, brp=2</div>
+<div><span class="text-emerald-400">[    1.520440]</span> i2c_designware 0000:00:15.0: Synopsys DesignWare I2C adapter initialized</div>
+<div><span class="text-emerald-400">[    1.789120]</span> spi_master spi0: registered master spi0 (max speed: 50000000 Hz)</div>
+<div><span class="text-emerald-400">[    2.045100]</span> eth0: Link is Up - 1000Mbps/Full - flow control rx/tx</div>
+<div><span class="text-emerald-400">[    2.105420]</span> systemd[1]: Reached target Embedded Engineering Workstation Ready.</div>
+<div class="pt-1 text-[10px] text-ink-faint select-none">Tip: Run <button type="button" class="term-link text-copper hover:text-cyan cursor-pointer underline bg-transparent border-0 p-0" data-cmd="pinout">pinout</button> or <button type="button" class="term-link text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0" data-cmd="cat projects/solar-car">cat projects/solar-car</button></div>
+</div>`;
+
+  const RP2040_ASCII = `          Raspberry Pi RP2040 (Pico DIP-40 Pinout)
+                   +------------------+
+   (UART0 TX)  GP0 | [01]        [40] | VBUS (5V USB)
+   (UART0 RX)  GP1 | [02]        [39] | VSYS (1.8V - 5.5V)
+               GND | [03]        [38] | GND
+   (I2C1 SDA)  GP2 | [04]        [37] | 3V3_EN
+   (I2C1 SCL)  GP3 | [05]        [36] | 3V3_OUT (3.3V)
+   (SPI0 RX)   GP4 | [06]        [35] | ADC_VREF
+   (SPI0 CSn)  GP5 | [07]        [34] | GP28 (ADC2)
+               GND | [08]        [33] | GND
+   (SPI0 SCK)  GP6 | [09]        [32] | GP27 (ADC1)
+   (SPI0 TX)   GP7 | [10]  [RP2040]  [31] | GP26 (ADC0)
+   (I2C0 SDA)  GP8 | [11] Dual ARM   [30] | RUN (Reset)
+   (I2C0 SCL)  GP9 | [12] Cortex-M0+ [29] | GP22
+               GND | [13] @ 133 MHz  [28] | GND
+   (UART1 TX) GP10 | [14]            [27] | GP21 (I2C0 SCL)
+   (UART1 RX) GP11 | [15]            [26] | GP20 (I2C0 SDA)
+   (SPI1 RX)  GP12 | [16]            [25] | GP19 (SPI0 TX)
+   (SPI1 CSn) GP13 | [17]            [24] | GP18 (SPI0 SCK)
+               GND | [18]            [23] | GND
+   (SPI1 SCK) GP14 | [19]            [22] | GP17 (SPI0 CSn)
+   (SPI1 TX)  GP15 | [20]        [21] | GP16 (SPI0 RX)
+                   +------------------+
+               SWD: [SWCLK] [GND] [SWDIO]`;
+
+  const STM32_ASCII = `          STM32F401 / STM32F411 (Black Pill Pinout)
+                   +------------------+
+               B12 | [01]        [40] | B10 (I2C2 SCL)
+               B13 | [02]        [39] | B2 (BOOT1)
+               B14 | [03]        [38] | B1
+               B15 | [04]        [37] | B0
+               A8  | [05]        [36] | A7 (SPI1 MOSI)
+   (USART1 TX) A9  | [06]        [35] | A6 (SPI1 MISO)
+   (USART1 RX) A10 | [07]  [STM32]   [34] | A5 (SPI1 SCK)
+   (USB D-)    A11 | [08] Cortex-M4F [33] | A4 (SPI1 NSS)
+   (USB D+)    A12 | [09] @ 100 MHz  [32] | A3
+   (SWDIO)     A13 | [10]            [31] | A2
+   (SWCLK)     A14 | [11]            [30] | A1
+               A15 | [12]            [29] | A0 (WKUP)
+               B3  | [13]            [28] | NRST (Reset)
+               B4  | [14]            [27] | 3V3
+               B5  | [15]            [26] | GND
+   (I2C1 SCL)  B6  | [16]            [25] | GND
+   (I2C1 SDA)  B7  | [17]            [24] | VBAT
+               B8  | [18]            [23] | PC13 (LED)
+               B9  | [19]            [22] | PC14 (OSC32_IN)
+               5V  | [20]        [21] | PC15 (OSC32_OUT)
+                   +------------------+
+               SWD: [SWCLK] [GND] [SWDIO]`;
+
+  const PINOUT_RP2040_HTML = `<div class="space-y-1 font-mono text-[10px] sm:text-[10.5px] leading-tight select-text">
+<div class="text-copper font-semibold">Raspberry Pi RP2040 (Pico DIP-40 Pinout)</div>
+<pre class="text-ink-dim whitespace-pre overflow-x-auto leading-tight">${esc(RP2040_ASCII)}</pre>
+<div class="text-[10px] text-ink-dim">Core Peripherals: 2x UART | 2x SPI | 2x I2C | 8x PIO State Machines | 16x PWM</div>
+<div class="text-[10px] text-ink-faint select-none">Tip: Run <button type="button" class="term-link text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="pinout stm32">pinout stm32</button> to view STM32 Cortex-M4 pinout.</div>
+</div>`;
+
+  const PINOUT_STM32_HTML = `<div class="space-y-1 font-mono text-[10px] sm:text-[10.5px] leading-tight select-text">
+<div class="text-copper font-semibold">STM32F401 / STM32F411 (Black Pill Pinout)</div>
+<pre class="text-ink-dim whitespace-pre overflow-x-auto leading-tight">${esc(STM32_ASCII)}</pre>
+<div class="text-[10px] text-ink-dim">Core Peripherals: Cortex-M4F with FPU | USB OTG | 3x USART | 3x SPI | 3x I2C</div>
+<div class="text-[10px] text-ink-faint select-none">Tip: Run <button type="button" class="term-link text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="pinout rp2040">pinout rp2040</button> to view RP2040 pinout.</div>
+</div>`;
+
+  const CONTACT_OUTPUT = `<div class="space-y-1 font-mono text-[11px] leading-relaxed select-text">
+<div class="text-ink font-semibold">Direct Inquiries &amp; Professional Profiles | Mason Pyle:</div>
+<div>Email:    <a href="mailto:hello@masonpyle.com" class="text-cyan hover:text-copper underline">hello@masonpyle.com</a></div>
+<div>GitHub:   <a href="https://github.com/mPyle05" target="_blank" rel="noopener" class="text-cyan hover:text-copper underline">https://github.com/mPyle05</a></div>
+<div>LinkedIn: <a href="https://linkedin.com/in/mason-pyle" target="_blank" rel="noopener" class="text-cyan hover:text-copper underline">https://linkedin.com/in/mason-pyle</a></div>
+<div>Resume:   <a href="/resume.pdf" target="_blank" rel="noopener" class="text-copper hover:underline">https://masonpyle.com/resume.pdf</a></div>
+<div>Location: Cincinnati, OH</div>
+<div class="pt-1 text-[10px] text-ink-dim">Open to embedded systems, firmware, and hardware engineering co-ops and roles.</div>
+</div>`;
+
+  const HELP_OUTPUT = `<div class="space-y-2 font-mono text-[11px] leading-relaxed select-text">
+<div class="text-ink font-semibold">Available Commands (click any command to execute):</div>
+
+<div class="space-y-1">
+  <div class="text-copper font-semibold text-[10.5px] uppercase tracking-wider">[Core Filesystem &amp; Navigation]</div>
+  <div class="grid grid-cols-1 sm:grid-cols-[160px_1fr] gap-x-2 gap-y-0.5 pl-2">
+    <div><button type="button" class="term-link text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="cat skills.md">cat skills.md</button></div>
+    <div class="text-ink-dim">Inspect firmware, protocols, and hardware skills</div>
+    <div><button type="button" class="term-link text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="ls /projects">ls /projects</button></div>
+    <div class="text-ink-dim">List engineering project directory names</div>
+    <div><button type="button" class="term-link text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="ls -la /projects">ls -la /projects</button></div>
+    <div class="text-ink-dim">Detailed project listing with architectural summaries</div>
+    <div><button type="button" class="term-link text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="cat projects/solar-car">cat projects/&lt;name&gt;</button></div>
+    <div class="text-ink-dim">Read technical specs (solar-car, keyboard, homelab, vexu, fpv)</div>
+  </div>
+</div>
+
+<div class="space-y-1">
+  <div class="text-emerald-400 font-semibold text-[10.5px] uppercase tracking-wider">[System &amp; Diagnostics]</div>
+  <div class="grid grid-cols-1 sm:grid-cols-[160px_1fr] gap-x-2 gap-y-0.5 pl-2">
+    <div><button type="button" class="term-link text-emerald-400 hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="whoami">whoami</button></div>
+    <div class="text-ink-dim">Display engineer identity, education, and credentials</div>
+    <div><button type="button" class="term-link text-emerald-400 hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="dmesg">dmesg</button></div>
+    <div class="text-ink-dim">Inspect simulated hardware boot log &amp; peripheral probe</div>
+    <div><button type="button" class="term-link text-emerald-400 hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="uname -a">uname -a</button></div>
+    <div class="text-ink-dim">Print kernel, OS, and architecture specifications</div>
+    <div><button type="button" class="term-link text-emerald-400 hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="pinout">pinout [mcu]</button></div>
+    <div class="text-ink-dim">ASCII pinout diagram ('pinout' for RP2040, 'pinout stm32')</div>
+  </div>
+</div>
+
+<div class="space-y-1">
+  <div class="text-cyan font-semibold text-[10.5px] uppercase tracking-wider">[Portfolio Utilities]</div>
+  <div class="grid grid-cols-1 sm:grid-cols-[160px_1fr] gap-x-2 gap-y-0.5 pl-2">
+    <div><button type="button" class="term-link text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="contact">contact</button></div>
+    <div class="text-ink-dim">Display direct email and social profiles</div>
+    <div><button type="button" class="term-link text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="clear">clear</button></div>
+    <div class="text-ink-dim">Clear terminal scroll buffer</div>
+    <div><button type="button" class="term-link text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="sudo">sudo [cmd]</button></div>
+    <div class="text-ink-dim">Test hardware privilege interlock</div>
+    <div><button type="button" class="term-link text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="reboot">reboot</button></div>
+    <div class="text-ink-dim">Restart developer terminal session</div>
+  </div>
+</div>
+
+<div class="pt-1 text-[10px] text-ink-faint select-none">Tip: Click quick chips above or press Tab for auto-completion.</div>
+</div>`;
+
+  const SUDO_OUTPUT = `<div class="space-y-0.5 font-mono text-[11px] leading-snug select-text">
+<div>[sudo] password for mason: *******</div>
+<div class="text-amber-400">Permission denied: Hardware interlock engaged. Privileged execution is disabled on production target.</div>
+</div>`;
+
+  function resolveCommand(raw) {
+    const trimmed = raw.trim();
+    const tokens = trimmed.split(/\s+/);
+    const lowerTokens = tokens.map((t) => t.toLowerCase());
+    const cmd = lowerTokens[0] || "";
+    const arg1 = lowerTokens[1] || "";
+
+    // 1. cat dispatcher
+    if (cmd === "cat") {
+      if (!arg1) {
+        return {
+          type: "html",
+          content: `<span class="text-amber-400">cat: missing file operand. Try 'cat skills.md' or 'cat projects/&lt;name&gt;'.</span>`,
+        };
+      }
+      if (arg1 === "skills.md" || arg1 === "skills" || arg1 === "/skills.md") {
+        return { type: "html", content: SKILLS_OUTPUT };
+      }
+      if (arg1 === "/projects" || arg1 === "projects" || arg1 === "/projects/" || arg1 === "projects/") {
+        return {
+          type: "html",
+          content: `<span class="text-amber-400">cat: ${esc(tokens[1])}: Is a directory. Use <button type="button" class="term-link text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="ls /projects">ls /projects</button></span>`,
+        };
+      }
+      if (arg1.startsWith("projects/") || arg1.startsWith("/projects/")) {
+        const slug = arg1.replace(/^\/?projects\//, "").replace(/\/$/, "");
+        if (PROJECT_SPECS[slug]) {
+          const specText = esc(PROJECT_SPECS[slug]);
+          const footerHtml = `<div class="pt-2 flex flex-wrap items-center gap-3 font-mono text-[11px]">
+  <a href="/projects/${esc(slug)}/" class="text-copper hover:underline inline-flex items-center gap-1 font-medium">Open technical spec &rarr;</a>
+  <span class="text-line">|</span>
+  <button type="button" class="term-link cursor-pointer underline text-cyan hover:text-copper bg-transparent border-0 p-0 font-mono" data-cmd="ls -la /projects">Back to projects list</button>
+</div>`;
+          return {
+            type: "html",
+            content: `${specText}\n${footerHtml}`,
+          };
+        }
+        return {
+          type: "html",
+          content: `<span class="text-amber-400">cat: projects/${esc(slug)}: No such project file. Available: solar-car, keyboard, homelab, vexu, fpv</span>`,
+        };
+      }
+      if (PROJECT_SPECS[arg1]) {
+        const specText = esc(PROJECT_SPECS[arg1]);
+        const footerHtml = `<div class="pt-2 flex flex-wrap items-center gap-3 font-mono text-[11px]">
+  <a href="/projects/${esc(arg1)}/" class="text-copper hover:underline inline-flex items-center gap-1 font-medium">Open technical spec &rarr;</a>
+  <span class="text-line">|</span>
+  <button type="button" class="term-link cursor-pointer underline text-cyan hover:text-copper bg-transparent border-0 p-0 font-mono" data-cmd="ls -la /projects">Back to projects list</button>
+</div>`;
+        return {
+          type: "html",
+          content: `${specText}\n${footerHtml}`,
+        };
+      }
+      if (arg1 === "readme.txt" || arg1 === "readme.md") {
+        return {
+          type: "html",
+          content: `Mason Pyle Portfolio | Embedded Systems &amp; Firmware Engineer. Type '<button type="button" class="term-link text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="help">help</button>' for commands.`,
+        };
+      }
+      return {
+        type: "html",
+        content: `<span class="text-amber-400">cat: ${esc(tokens[1])}: No such file or directory</span>`,
+      };
+    }
+
+    // 2. ls dispatcher
+    if (cmd === "ls") {
+      const isLong = lowerTokens.includes("-la") || lowerTokens.includes("-l") || lowerTokens.includes("-al");
+      const hasProjectsArg = lowerTokens.some((t) => t.includes("project"));
+
+      if (isLong) {
+        return { type: "html", content: LS_LA_PROJECTS_OUTPUT };
+      }
+      if (hasProjectsArg) {
+        return { type: "html", content: LS_PROJECTS_OUTPUT };
+      }
+      if (!arg1 || arg1 === "~" || arg1 === ".") {
+        return { type: "html", content: LS_ROOT_OUTPUT };
+      }
+      return { type: "html", content: LS_PROJECTS_OUTPUT };
+    }
+
+    // 3. whoami / id
+    if (cmd === "whoami" || cmd === "id") {
+      return { type: "html", content: WHOAMI_OUTPUT };
+    }
+
+    // 4. dmesg
+    if (cmd === "dmesg") {
+      return { type: "html", content: DMESG_OUTPUT };
+    }
+
+    // 5. uname
+    if (cmd === "uname") {
+      if (lowerTokens.includes("-a")) {
+        return {
+          type: "text",
+          content: "Linux dev-box 6.8.0-45-embedded #45-Ubuntu SMP PREEMPT_DYNAMIC x86_64 x86_64 x86_64 GNU/Linux",
+        };
+      }
+      return { type: "text", content: "Linux" };
+    }
+
+    // 6. pinout
+    if (cmd === "pinout") {
+      if (arg1 === "stm32") {
+        return { type: "html", content: PINOUT_STM32_HTML };
+      }
+      return { type: "html", content: PINOUT_RP2040_HTML };
+    }
+
+    // 7. contact / email
+    if (cmd === "contact" || cmd === "email") {
+      return { type: "html", content: CONTACT_OUTPUT };
+    }
+
+    // 8. help / ? / man
+    if (cmd === "help" || cmd === "?" || cmd === "man") {
+      return { type: "html", content: HELP_OUTPUT };
+    }
+
+    // 9. sudo
+    if (cmd === "sudo") {
+      return { type: "html", content: SUDO_OUTPUT };
+    }
+
+    // Unrecognized
+    return {
+      type: "html",
+      content: `<div>zsh: command not found: <span class="text-amber-400">${esc(trimmed)}</span>. Type '<button type="button" class="term-link text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="help">help</button>' for available commands.</div>`,
+    };
+  }
+
+  // Interactive state
+  const cmdHistory = [];
+  let historyIndex = 0;
+  let tempDraft = "";
+  const autoPlayTimers = [];
+  let isAutoPlaying = true;
+
+  function cancelAutoPlay() {
+    if (!isAutoPlaying) return;
+    isAutoPlaying = false;
+    autoPlayTimers.forEach((t) => clearTimeout(t));
+    autoPlayTimers.length = 0;
+    inputEl.placeholder = "type 'help', 'cat skills.md'...";
+  }
+
+  function handleReboot() {
+    historyEl.innerHTML = "";
+    const rebootMsg = document.createElement("div");
+    rebootMsg.className = "space-y-1 font-mono text-[11px] text-amber-400 select-text";
+    rebootMsg.innerHTML = `<div>Broadcast message from mason@dev-box (tty1):</div>
+<div>The system is going down for reboot NOW!</div>
+<div class="pt-1 text-ink-dim">Restarting system...</div>
+<div>[ <span class="text-emerald-400">OK</span> ] Stopped target Multi-User System.</div>
+<div>[ <span class="text-emerald-400">OK</span> ] Unmounted /projects.</div>
+<div>[ <span class="text-emerald-400">OK</span> ] Reached target System Reboot.</div>`;
+    historyEl.appendChild(rebootMsg);
+    bodyEl.scrollTop = bodyEl.scrollHeight;
+
+    setTimeout(() => {
+      historyEl.innerHTML = "";
+      const welcome = document.createElement("div");
+      welcome.className = "text-ink-faint text-[10px] select-none";
+      welcome.textContent = "Mason Pyle Developer Environment | Type 'help' or click quick chips";
+      historyEl.appendChild(welcome);
+      bodyEl.scrollTop = 0;
+    }, 1200);
+  }
+
+  function execute(cmdStr) {
+    const raw = cmdStr.trim();
+    if (!raw) return;
+
+    const lower = raw.toLowerCase();
+    if (lower === "clear" || lower === "cls") {
+      historyEl.innerHTML = "";
+      bodyEl.scrollTop = 0;
+      return;
+    }
+
+    if (lower === "reboot") {
+      handleReboot();
+      return;
+    }
+
+    const entry = document.createElement("div");
+    entry.className = "space-y-1";
+
+    const promptLine = document.createElement("div");
+    promptLine.innerHTML = `<span class="text-emerald-400 font-semibold">mason@dev-box</span><span class="text-cyan">:~</span><span class="text-ink">$</span> <span class="text-ink font-semibold">${esc(raw)}</span>`;
+    entry.appendChild(promptLine);
+
+    const response = resolveCommand(raw);
+
+    const outputContainer = document.createElement("div");
+    outputContainer.className = "text-ink-dim text-[11px] sm:text-[12px] whitespace-pre-wrap break-words font-mono leading-relaxed select-text";
+
+    if (response.type === "html") {
+      outputContainer.innerHTML = response.content;
+    } else {
+      outputContainer.textContent = response.content;
+    }
+    entry.appendChild(outputContainer);
+
+    historyEl.appendChild(entry);
+    bodyEl.scrollTop = bodyEl.scrollHeight;
+  }
+
+  function runCommand(cmdStr) {
+    cancelAutoPlay();
+    const trimmed = cmdStr.trim();
+    if (!trimmed) return;
+
+    const lower = trimmed.toLowerCase();
+    if (lower !== "clear" && lower !== "cls") {
+      if (cmdHistory.length === 0 || cmdHistory[cmdHistory.length - 1] !== trimmed) {
+        cmdHistory.push(trimmed);
+      }
+    }
+    historyIndex = cmdHistory.length;
+    tempDraft = "";
+    execute(trimmed);
+    inputEl.value = "";
+    inputEl.focus();
+  }
+
+  // Quick Chips click handler
+  document.querySelectorAll(".term-chip").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const cmd = btn.dataset.cmd;
+      if (cmd) {
+        btn.classList.add("ring-1", "ring-cyan/60", "bg-cyan/15", "text-cyan");
+        setTimeout(() => {
+          btn.classList.remove("ring-1", "ring-cyan/60", "bg-cyan/15", "text-cyan");
+        }, 350);
+        runCommand(cmd);
+      }
+    });
+  });
+
+  // Window header controls
+  const closeBtn = document.getElementById("term-btn-close");
+  if (closeBtn) {
+    closeBtn.addEventListener("click", () => runCommand("clear"));
+  }
+  const minBtn = document.getElementById("term-btn-min");
+  if (minBtn) {
+    minBtn.addEventListener("click", () => {
+      bodyEl.classList.remove("lg:h-[460px]");
+      bodyEl.classList.add("lg:h-[320px]");
+      bodyEl.scrollTop = bodyEl.scrollHeight;
+    });
+  }
+  const maxBtn = document.getElementById("term-btn-max");
+  if (maxBtn) {
+    maxBtn.addEventListener("click", () => {
+      bodyEl.classList.toggle("lg:h-[320px]");
+      bodyEl.classList.toggle("lg:h-[460px]");
+      bodyEl.scrollTop = bodyEl.scrollHeight;
+    });
+  }
+
+  // Body event delegation for clickable links / chips and auto-focus
+  bodyEl.addEventListener("click", (e) => {
+    cancelAutoPlay();
+    const trigger = e.target.closest("[data-cmd]");
+    if (trigger) {
+      const cmd = trigger.getAttribute("data-cmd");
+      if (cmd) {
+        runCommand(cmd);
+        return;
+      }
+    }
+    if (e.target.closest("a")) return;
+    const selection = window.getSelection();
+    if (selection && selection.toString().length > 0) return;
+    inputEl.focus();
+  });
+
+  // Tab auto-completion catalog
+  const completionCorpus = [
+    "cat skills.md",
+    "cat projects/solar-car",
+    "cat projects/keyboard",
+    "cat projects/homelab",
+    "cat projects/vexu",
+    "cat projects/fpv",
+    "ls",
+    "ls /projects",
+    "ls -la /projects",
+    "whoami",
+    "dmesg",
+    "uname -a",
+    "pinout",
+    "pinout stm32",
+    "pinout rp2040",
+    "contact",
+    "help",
+    "clear",
+    "sudo",
+    "reboot",
+  ];
+
+  function handleTabCompletion() {
+    const current = inputEl.value;
+    const trimmed = current.trimStart();
+    if (!trimmed) return;
+
+    const matches = completionCorpus.filter((c) => c.startsWith(trimmed.toLowerCase()));
+    if (matches.length === 1) {
+      inputEl.value = matches[0];
+      inputEl.setSelectionRange(inputEl.value.length, inputEl.value.length);
+    } else if (matches.length > 1) {
+      // Find longest common prefix
+      let lcp = matches[0];
+      for (let i = 1; i < matches.length; i++) {
+        while (!matches[i].startsWith(lcp)) {
+          lcp = lcp.slice(0, -1);
+        }
+      }
+      if (lcp.length > trimmed.length) {
+        inputEl.value = lcp;
+        inputEl.setSelectionRange(inputEl.value.length, inputEl.value.length);
+      } else {
+        // Output matching candidates to history buffer
+        const hintEntry = document.createElement("div");
+        hintEntry.className = "text-ink-faint text-[10.5px] py-1 flex flex-wrap gap-2 select-text";
+        hintEntry.innerHTML = matches
+          .map(
+            (m) =>
+              `<button type="button" class="term-link text-cyan hover:text-copper cursor-pointer underline bg-transparent border-0 p-0 font-mono" data-cmd="${esc(
+                m
+              )}">${esc(m)}</button>`
+          )
+          .join("  ");
+        historyEl.appendChild(hintEntry);
+        bodyEl.scrollTop = bodyEl.scrollHeight;
+      }
+    }
+  }
+
+  // Keyboard navigation & execution
+  inputEl.addEventListener("keydown", (e) => {
+    cancelAutoPlay();
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const val = inputEl.value;
+      runCommand(val);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (cmdHistory.length === 0) return;
+      if (historyIndex === cmdHistory.length) {
+        tempDraft = inputEl.value;
+      }
+      if (historyIndex > 0) {
+        historyIndex--;
+        inputEl.value = cmdHistory[historyIndex];
+        setTimeout(() => inputEl.setSelectionRange(inputEl.value.length, inputEl.value.length), 0);
+      }
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (historyIndex < cmdHistory.length - 1) {
+        historyIndex++;
+        inputEl.value = cmdHistory[historyIndex];
+        setTimeout(() => inputEl.setSelectionRange(inputEl.value.length, inputEl.value.length), 0);
+      } else if (historyIndex === cmdHistory.length - 1) {
+        historyIndex = cmdHistory.length;
+        inputEl.value = tempDraft;
+        setTimeout(() => inputEl.setSelectionRange(inputEl.value.length, inputEl.value.length), 0);
+      }
+    } else if (e.key === "Tab") {
+      e.preventDefault();
+      handleTabCompletion();
+    }
+  });
+
+  inputEl.addEventListener("input", () => {
+    cancelAutoPlay();
+  });
+
+  // Hybrid Auto-Play: initial realistic typing demo
+  function autoType(cmdText, delay, cb) {
+    const timeoutId = setTimeout(() => {
+      if (!isAutoPlaying) return;
+      let i = 0;
+      inputEl.placeholder = "";
+      const timer = setInterval(() => {
+        if (!isAutoPlaying) {
+          clearInterval(timer);
+          return;
+        }
+        i++;
+        inputEl.value = cmdText.slice(0, i);
+        if (i >= cmdText.length) {
+          clearInterval(timer);
+          const subTimeout = setTimeout(() => {
+            if (!isAutoPlaying) return;
+            runCommand(cmdText);
+            inputEl.placeholder = "type 'help', 'cat skills.md'...";
+            if (cb) cb();
+          }, 350);
+          autoPlayTimers.push(subTimeout);
+        }
+      }, 35);
+      autoPlayTimers.push(timer);
+    }, delay);
+    autoPlayTimers.push(timeoutId);
+  }
+
+  // Kick off automatic boot presentation on load
+  autoType("cat skills.md", 700, () => {
+    autoType("ls -la /projects", 1400);
+  });
 }
 
 // ---- elevated project card with full-surface clickability -------------------

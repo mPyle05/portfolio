@@ -162,4 +162,95 @@
   .tok-com  { color: #6272A4; font-style: italic; }
   .tok-num  { color: #BD93F9; }
   .tok-fn   { color: #6FA9B0; }
+
+  /* ==========================================================================
+     INTERACTIVE DEVELOPER TERMINAL COMPONENT
+     ========================================================================== */
+
+  /* Terminal window chassis with ambient phosphor glow */
+  .term-window {
+    box-shadow:
+      0 0 0 1px rgba(111, 169, 176, 0.12),
+      0 12px 32px -4px rgba(0, 0, 0, 0.75),
+      0 0 35px -6px rgba(111, 169, 176, 0.14),
+      0 0 60px -12px rgba(201, 138, 75, 0.08);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .term-window:focus-within {
+    box-shadow:
+      0 0 0 1px rgba(111, 169, 176, 0.28),
+      0 16px 40px -4px rgba(0, 0, 0, 0.85),
+      0 0 45px -4px rgba(111, 169, 176, 0.22),
+      0 0 80px -10px rgba(201, 138, 75, 0.12);
+    border-color: rgba(111, 169, 176, 0.35);
+  }
+
+  /* Subtle CRT scanline texture */
+  .term-scanlines {
+    position: relative;
+  }
+  .term-scanlines::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      rgba(18, 22, 28, 0) 50%,
+      rgba(0, 0, 0, 0.22) 50%
+    );
+    background-size: 100% 4px;
+    pointer-events: none;
+    opacity: 0.35;
+    z-index: 5;
+    border-radius: 0.75rem;
+  }
+
+  /* Terminal custom scrollbar */
+  .term-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #242A32 transparent;
+  }
+  .term-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .term-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .term-scrollbar::-webkit-scrollbar-thumb {
+    background: #242A32;
+    border-radius: 9999px;
+    transition: background-color 0.2s ease;
+  }
+  .term-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #363E4A;
+  }
+  .term-scrollbar::-webkit-scrollbar-thumb:active {
+    background: #6FA9B0;
+  }
+
+  /* Terminal quick chips */
+  .term-chip {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded border border-line-soft bg-bg/80
+           text-[10px] font-mono text-ink-dim transition-all duration-150 cursor-pointer select-none
+           hover:bg-bg-raised hover:-translate-y-0.5 active:translate-y-0 active:scale-95;
+  }
+  .term-chip:focus-visible {
+    outline: 2px solid theme("colors.cyan");
+    outline-offset: 1px;
+  }
+  .term-chip-cyan:hover {
+    @apply border-cyan/60 text-cyan bg-cyan/5 shadow-[0_0_10px_rgba(111,169,176,0.15)];
+  }
+  .term-chip-copper:hover {
+    @apply border-copper/60 text-copper bg-copper/5 shadow-[0_0_10px_rgba(201,138,75,0.15)];
+  }
+  .term-chip-emerald:hover {
+    @apply border-emerald-400/60 text-emerald-400 bg-emerald-400/5 shadow-[0_0_10px_rgba(52,211,153,0.15)];
+  }
+
+  /* Clickable command / token inside terminal output */
+  .term-clickable,
+  .term-link {
+    @apply text-cyan hover:text-copper cursor-pointer underline transition-colors duration-150 decoration-cyan/40;
+  }
 }
